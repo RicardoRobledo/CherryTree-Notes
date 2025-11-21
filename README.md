@@ -96,6 +96,5 @@ These notes serve as:
 ## 📚 Learning Resources
 
 - [TryHackMe](https://tryhackme.com) - Interactive cybersecurity training
-- [HackTheBox](https://hackthebox.eu) - Penetration testing labs
 - [OWASP](https://owasp.org) - Web application security
 - Official tool documentation and man pages
